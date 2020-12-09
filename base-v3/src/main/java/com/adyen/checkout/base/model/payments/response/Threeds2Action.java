@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 
 import com.adyen.checkout.base.util.ActionTypes;
 import com.adyen.checkout.core.exception.ModelSerializationException;
+import com.adyen.checkout.core.exception.NoConstructorException;
 import com.adyen.checkout.core.model.JsonUtils;
 
 import org.json.JSONException;
@@ -91,5 +92,40 @@ public class Threeds2Action extends Action {
 
     public void setSubtype(@Nullable String subtype) {
         this.subtype = subtype;
+    }
+
+    @Nullable
+    public SubType getSubtypeEnum() {
+        return parseStringToSubType(subtype);
+    }
+
+    @Nullable
+    private SubType parseStringToSubType(@Nullable String type) {
+        if (type == null) {
+            return null;
+        }
+        switch (type) {
+            case SubTypes.FINGERPRINT:
+                return SubType.FINGERPRINT;
+            case SubTypes.CHALLENGE:
+                return SubType.CHALLENGE;
+            default:
+                return null;
+        }
+    }
+
+    private static final class SubTypes {
+
+        public static final String FINGERPRINT = "fingerprint";
+        public static final String CHALLENGE = "challenge";
+
+        private SubTypes() {
+            throw new NoConstructorException();
+        }
+    }
+
+    public enum SubType {
+        FINGERPRINT,
+        CHALLENGE
     }
 }
