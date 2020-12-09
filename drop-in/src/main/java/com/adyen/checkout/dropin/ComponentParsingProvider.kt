@@ -128,8 +128,7 @@ internal fun <T : Configuration> getDefaultConfigFor(
         ActionTypes.REDIRECT -> {
             RedirectConfiguration.Builder(context)
         }
-        ActionTypes.THREEDS2_FINGERPRINT,
-        ActionTypes.THREEDS2_CHALLENGE -> {
+        ActionTypes.THREEDS2 -> {
             Adyen3DS2Configuration.Builder(context)
         }
         // ActionTypes.SDK is not distinguishable only by the type since we need the payment method too

@@ -29,8 +29,7 @@ import com.adyen.checkout.base.component.ActionComponentProviderImpl;
 import com.adyen.checkout.base.component.BaseActionComponent;
 import com.adyen.checkout.base.encoding.Base64Encoder;
 import com.adyen.checkout.base.model.payments.response.Action;
-import com.adyen.checkout.base.model.payments.response.Threeds2ChallengeAction;
-import com.adyen.checkout.base.model.payments.response.Threeds2FingerprintAction;
+import com.adyen.checkout.base.model.payments.response.Threeds2Action;
 import com.adyen.checkout.core.api.ThreadManager;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.exception.ComponentException;
@@ -114,26 +113,21 @@ public final class Adyen3DS2Component extends BaseActionComponent<Adyen3DS2Confi
     @Override
     @NonNull
     protected List<String> getSupportedActionTypes() {
-        final String[] supportedCodes = {Threeds2FingerprintAction.ACTION_TYPE, Threeds2ChallengeAction.ACTION_TYPE};
+        final String[] supportedCodes = {Threeds2Action.ACTION_TYPE};
         return Collections.unmodifiableList(Arrays.asList(supportedCodes));
     }
 
     @Override
     protected void handleActionInternal(@NonNull Activity activity, @NonNull Action action) throws ComponentException {
-        if (Threeds2FingerprintAction.ACTION_TYPE.equals(action.getType())) {
-            final Threeds2FingerprintAction fingerprintAction = (Threeds2FingerprintAction) action;
-            if (TextUtils.isEmpty(fingerprintAction.getToken())) {
-                throw new ComponentException("Fingerprint token not found.");
+        if (Threeds2Action.ACTION_TYPE.equals(action.getType())) {
+            final Threeds2Action threeds2Action = (Threeds2Action) action;
+            if (TextUtils.isEmpty(threeds2Action.getToken())) {
+                throw new ComponentException("3DS2 token not found.");
             }
 
-            identifyShopper(activity, fingerprintAction.getToken());
-
-        } else if (Threeds2ChallengeAction.ACTION_TYPE.equals(action.getType())) {
-            final Threeds2ChallengeAction challengeAction = (Threeds2ChallengeAction) action;
-            if (TextUtils.isEmpty(challengeAction.getToken())) {
-                throw new ComponentException("Challenge token not found.");
-            }
-            challengeShopper(activity, challengeAction.getToken());
+            //TODO: call identifyShopper or challengeShopper based on the action subtype
+            //identifyShopper(activity, threeds2Action.getToken());
+            //challengeShopper(activity, threeds2Action.getToken());
         }
     }
 
